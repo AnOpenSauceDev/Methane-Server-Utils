@@ -1,0 +1,30 @@
+{
+  "schemaVersion": 1,
+  "id": "methane_server",
+  "version": "${version}",
+  "name": "Methane Server Utils",
+  "description": "Server-side configuration for Methane, which allows you to enforce some settings.",
+  "authors": [
+    "AnOpenSauceDev"
+  ],
+  "contact": {},
+  "license": "AGPL-3.0",
+  "icon": "assets/methane_server/icon.png",
+  "environment": "*",
+  "entrypoints": {
+    "client": [
+      "com.github.anopensaucedev.methane_server.client.MethaneServerUtilsClient"
+    ],
+    "main": [
+      "com.github.anopensaucedev.methane_server.MethaneServerUtils"
+    ]
+  },
+  "mixins": [
+    "methane_server.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=${loader_version}",
+    "fabric": "*",
+    "minecraft": "${minecraft_version}"
+  }
+}
