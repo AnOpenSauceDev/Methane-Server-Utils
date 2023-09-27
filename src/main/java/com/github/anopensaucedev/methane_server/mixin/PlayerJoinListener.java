@@ -52,7 +52,7 @@ public abstract class PlayerJoinListener   {
         int[] intarraydata = {booltoInt(Constants.enforceModState),booltoInt(Constants.globalModState),booltoInt(Constants.forceMethane)}; // encode our data into an int array, because we cant write bool arrays.
         buf.writeIntArray(intarraydata);
 
-  
+
 
         ServerPlayNetworking.send(player,Constants.METHANE_STATE_PACKET,buf);
     }
