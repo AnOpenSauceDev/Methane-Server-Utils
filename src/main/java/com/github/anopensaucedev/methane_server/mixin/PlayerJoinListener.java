@@ -6,7 +6,9 @@ import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+import net.minecraft.client.util.NetworkUtils;
 import net.minecraft.network.ClientConnection;
+import net.minecraft.network.NetworkThreadUtils;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.s2c.play.PlayerListS2CPacket;
@@ -30,7 +32,7 @@ import java.util.List;
 
 import static com.github.anopensaucedev.methane_server.MethaneServerUtils.hasMethane;
 
-@Mixin(PlayerManager.class)
+@Mixin(value = PlayerManager.class, priority = 2000) // give a higher priority (might fix things, might break things.)
 public abstract class PlayerJoinListener   {
 
 
@@ -51,10 +53,16 @@ public abstract class PlayerJoinListener   {
         PacketByteBuf buf = PacketByteBufs.create();
         int[] intarraydata = {booltoInt(Constants.enforceModState),booltoInt(Constants.globalModState),booltoInt(Constants.forceMethane)}; // encode our data into an int array, because we cant write bool arrays.
         buf.writeIntArray(intarraydata);
+        // we can't send packets just yet, otherwise we'll run into a nasty race condition
+
+        SendPacket(player,buf);
 
 
+    }
 
-        ServerPlayNetworking.send(player,Constants.METHANE_STATE_PACKET,buf);
+    void SendPacket(ServerPlayerEntity player, PacketByteBuf buf){
+        
+        ServerPlayNetworking.send(player, Constants.METHANE_STATE_PACKET,buf);
     }
 
     // gamerule updates will only affect players AFTER rejoining.
